@@ -1,0 +1,160 @@
+<html>
+
+<head>
+<style>
+#painel div {
+	display: inline-block;
+	width: 33%;
+margin: 0px 5px;
+float: left;
+}
+#bancos div {
+	border:1px solid grey;
+	min-height:200px;
+	width: 100%;
+	background: #e1e1e1;
+	padding:6px;
+}
+ h5 {
+text-align:right;
+}
+ol, li {
+	list-style: none;
+	padding-left: 0px;
+text-align:left;
+}
+.red {
+color:red;
+}
+.green{
+color:green;
+}
+#contas div {
+	border:1px solid grey;
+	min-height:200px;
+	width: 100%;
+	padding:6px;
+}
+</style>
+
+</head>
+<body>
+<h1> Segunda, 23 de novembro de 2020
+ </h1>
+<div id="painel">
+	<div id="bancos">
+<h2> Bancos </h2>
+		<div>
+			<h4> BB | 6543-9 </h4>
+			<ol id="listaBB">
+				<li> <span class="green">+</span> 996,33 </li>
+				<li> <span class="red">-</span> 50,00 </li>
+				<li> <span class="green">+</span> 103,03 </li>
+				
+			</ol>
+			<input data-signal="true" id="inputBB"/> 
+			<h5> Total: <span class="green"> 1049,36 </span></h5>
+		</div>
+<hr>
+<div>
+			<h4> BRA | 22243-7
+ </h4>
+			<ol id="listaBrad">
+				<li> <span class="green">+</span> 150,00 </li>
+				<li> <span class="red">-</span> 500,00 </li>
+				<li> <span class="green">+</span> 100,00 </li>
+			
+			</ol>
+			<input data-signal="true" id="inpurBrad"/> 
+			<h5> Total: <span class="red"> 250,00 </span></h5>
+		</div>
+
+	</div>
+
+
+	<div id="contas">
+<h2> Contas</h2>
+		<div id="duplicatas">
+			<h4> Duplicatas	| 6543-9 </h4>
+			<ol id="listaDupli">
+				<li> 996,33 </li>
+				<li>  50,00 </li>
+				<li> 103,03 </li>
+			</ol>
+			<input data-signal="false" id="inputDupli"/>
+			<h5> Total: <span > 1049,36 </span></h5>
+		</div>
+<hr>
+<div id="outras">
+			<h4> Outras </h4>
+			<ol id="listaOutras">
+				<li>  150,00 </li>
+				<li>  500,00 </li>
+				<li>  100,00 </li>
+			</ol>
+			<input data-signal="false" id="inputOutras"/>
+			<h5> Total: <span > 250,00 </span></h5>
+		</div>
+
+	</div>
+
+</div>
+
+
+<script>
+
+var inputs = document.querySelectorAll("input");
+
+
+var insertToList = function(id, val, negative, useSignal) {
+var lista = document.querySelector("#lista"+id);
+var span = `<span class='${negative ? 'red':'green'}'>${negative ? '-':'+'}</span> `;
+var liHTML = `<li> ${useSignal ? span : ''} ${val} </li>`;
+var newLi = document.createElement('li');
+newLi.innerHTML = liHTML;
+//lista.innerHTML+=li;
+lista.insertBefore(newLi, lista.childNodes[lista.length-2]);
+
+}
+
+var deposito = function (input, val)  {
+var contas = {1: 'BB', 2: 'Brad'}
+var usarConta = confirm("Pago com debito em conta?");
+	if(usarConta) {
+	var qualCont = prompt("Qual conta? \n 1 - BB \n 2 - Bradesco");
+
+insertToList(contas[qualCont], val, true, true)
+	}
+}
+
+
+
+var addValue = function(input,  value, negative) {
+
+var id = input.id;
+id = id.replace('input','');
+var val = input.value;
+var negative = val.indexOf("-") != -1;
+val = val.replace('-','');
+var useSignal = input.getAttribute('data-signal') == "true";
+insertToList(id, val, negative, useSignal);
+input.value = "";
+if(!useSignal) {
+deposito(input, val)
+}
+}
+
+for(var i = 0; i < inputs.length; i++) {
+inputs[i].addEventListener("keydown", function(event) {
+if(event.keyCode == 13) {
+
+
+addValue(event.target)
+}
+});
+}
+
+
+ </script>
+</body>
+</html>
